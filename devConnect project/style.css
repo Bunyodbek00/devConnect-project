@@ -1,0 +1,222 @@
+:root {
+  --bg: #15161a;
+  --panel: #1c1d22;
+  --border: #2c2e35;
+  --text: #f2f0ea;
+  --text-dim: #a5a7b0;
+  --track-a: #e8763c;
+  --track-b: #5fa8d3;
+  --track-c: #8fbf6b;
+  --focus: #f2f0ea;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.45;
+  padding: 0 0 4rem;
+}
+
+.page-header {
+  padding: 2rem 1rem 1rem;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.page-header h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.75rem;
+  letter-spacing: -0.01em;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+
+/* Day tabs */
+.day-tabs {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 640px;
+  margin: 1rem auto 0;
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.day-tab {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  font-family: inherit;
+  padding: 0.75rem 0.25rem;
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+
+.day-tab.is-active {
+  color: var(--text);
+  border-bottom-color: var(--track-a);
+}
+
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 0;
+}
+
+/* Time slot */
+.slot {
+  margin-bottom: 1.75rem;
+}
+
+.slot-time {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin: 0 0 0.6rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Narrow-screen default: sessions in a slot stack vertically, one per row.
+   This IS the replacement for side-by-side track columns — see README. */
+.slot-sessions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.session-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--track-color, var(--text-dim));
+  border-radius: 6px;
+  padding: 0.7rem 0.85rem;
+  color: var(--text);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.session-card[data-track="a"] { --track-color: var(--track-a); }
+.session-card[data-track="b"] { --track-color: var(--track-b); }
+.session-card[data-track="c"] { --track-color: var(--track-c); }
+
+.session-track-label {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--track-color, var(--text-dim));
+  margin-bottom: 0.2rem;
+}
+
+.session-title {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+}
+
+.session-speaker {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+/* Wider screens: enough room for three tracks side by side, still synced to the time row */
+@media (min-width: 700px) {
+  .page-header, .day-tabs, main { max-width: 960px; }
+
+  .slot-sessions {
+    flex-direction: row;
+  }
+
+  .session-card {
+    flex: 1;
+  }
+}
+
+/* Focus visibility — applies everywhere, deliberately not suppressed */
+a:focus-visible,
+button:focus-visible,
+.session-card:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Dialog */
+dialog {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0;
+  width: min(560px, calc(100vw - 2rem));
+  max-height: min(80vh, 640px);
+}
+
+dialog::backdrop {
+  background: rgba(10, 10, 12, 0.7);
+}
+
+.dialog-inner {
+  padding: 1.75rem 1.5rem 1.5rem;
+  position: relative;
+  overflow-y: auto;
+  max-height: inherit;
+}
+
+.dialog-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 1.25rem;
+  line-height: 1;
+  width: 2.25rem;
+  height: 2.25rem;
+  cursor: pointer;
+}
+
+.dialog-track {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  color: var(--track-color, var(--text-dim));
+}
+
+#session-dialog h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.3rem;
+}
+
+.dialog-meta {
+  margin: 0 0 0.75rem;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+.dialog-speaker {
+  margin: 0 0 1rem;
+  font-weight: 600;
+}
+
+#dialog-description {
+  margin: 0;
+  color: var(--text);
+}

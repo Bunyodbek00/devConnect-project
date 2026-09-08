@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal Conference — Schedule</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="page-header">
+  <h1>Signal Conference</h1>
+  <p class="subtitle">Two days, three tracks, one schedule.</p>
+</header>
+
+<nav class="day-tabs" aria-label="Conference day">
+  <button type="button" class="day-tab is-active" id="tab-day1" aria-controls="day1" aria-selected="true" role="tab">Day 1 — Oct 14</button>
+  <button type="button" class="day-tab" id="tab-day2" aria-controls="day2" aria-selected="false" role="tab">Day 2 — Oct 15</button>
+</nav>
+
+<main>
+  <section id="day1" class="day-schedule" role="tabpanel" aria-labelledby="tab-day1">
+    <!-- Slots injected by app.js -->
+  </section>
+
+  <section id="day2" class="day-schedule" role="tabpanel" aria-labelledby="tab-day2" hidden>
+    <!-- Slots injected by app.js -->
+  </section>
+</main>
+
+<!-- Session detail dialog -->
+<dialog id="session-dialog">
+  <form method="dialog" class="dialog-inner">
+    <button type="submit" class="dialog-close" aria-label="Close session details">×</button>
+    <p class="dialog-track" id="dialog-track"></p>
+    <h2 id="dialog-title"></h2>
+    <p class="dialog-meta" id="dialog-meta"></p>
+    <p class="dialog-speaker" id="dialog-speaker"></p>
+    <p id="dialog-description"></p>
+  </form>
+</dialog>
+
+<script src="sessions.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
