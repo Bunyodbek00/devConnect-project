@@ -1,2 +1,2 @@
 # devConnect-project
-a task in accessible layout
+a task in state and open
