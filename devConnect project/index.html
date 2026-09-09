@@ -3,44 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Signal Conference — Schedule</title>
+<title>Reading List</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header class="page-header">
-  <h1>Signal Conference</h1>
-  <p class="subtitle">Two days, three tracks, one schedule.</p>
+  <h1>Reading List</h1>
+  <p class="subtitle">Books you mean to read, kept in one place.</p>
 </header>
 
-<nav class="day-tabs" aria-label="Conference day">
-  <button type="button" class="day-tab is-active" id="tab-day1" aria-controls="day1" aria-selected="true" role="tab">Day 1 — Oct 14</button>
-  <button type="button" class="day-tab" id="tab-day2" aria-controls="day2" aria-selected="false" role="tab">Day 2 — Oct 15</button>
-</nav>
-
 <main>
-  <section id="day1" class="day-schedule" role="tabpanel" aria-labelledby="tab-day1">
-    <!-- Slots injected by app.js -->
-  </section>
+  <form id="add-form" class="add-form">
+    <div class="add-form-fields">
+      <label for="book-title">Title</label>
+      <input id="book-title" name="title" type="text" placeholder="The Left Hand of Darkness" required>
+      <label for="book-author">Author</label>
+      <input id="book-author" name="author" type="text" placeholder="Ursula K. Le Guin" required>
+    </div>
+    <button type="submit" class="btn-primary">Add to list</button>
+  </form>
 
-  <section id="day2" class="day-schedule" role="tabpanel" aria-labelledby="tab-day2" hidden>
-    <!-- Slots injected by app.js -->
+  <section id="list-region" aria-live="polite">
+    <!-- Loading / error / empty / list states are rendered here by app.js -->
   </section>
 </main>
 
-<!-- Session detail dialog -->
-<dialog id="session-dialog">
-  <form method="dialog" class="dialog-inner">
-    <button type="submit" class="dialog-close" aria-label="Close session details">×</button>
-    <p class="dialog-track" id="dialog-track"></p>
-    <h2 id="dialog-title"></h2>
-    <p class="dialog-meta" id="dialog-meta"></p>
-    <p class="dialog-speaker" id="dialog-speaker"></p>
-    <p id="dialog-description"></p>
-  </form>
-</dialog>
+<footer class="reviewer-panel">
+  <p class="reviewer-panel-label">Reviewer controls — force a state without editing code</p>
+  <div class="reviewer-panel-buttons">
+    <button type="button" id="force-loading" class="btn-ghost">Show loading state</button>
+    <button type="button" id="force-error" class="btn-ghost">Show error state</button>
+    <button type="button" id="force-empty" class="btn-ghost">Show empty state</button>
+    <button type="button" id="force-reset" class="btn-ghost">Reset to normal</button>
+  </div>
+</footer>
 
-<script src="sessions.js"></script>
+<script src="store.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

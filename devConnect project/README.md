@@ -1,74 +1,52 @@
-# Signal Conference — Schedule
+# Reading List
 
-A single-page schedule for a two-day, three-track conference.
+A personal reading list: add books, remove them, and pick up where you left
+off. Books persist in the browser's `localStorage`, wrapped behind an async
+API layer with a simulated ~700ms delay — so loading is a real state the
+app passes through, not a UI trick.
 
-## How parallel tracks are handled on a narrow screen
+## How each state is reached
 
-At 320px there is not enough width to show three columns without either
-shrinking text past legibility or introducing horizontal scroll — both are
-ruled out by the brief.
+A dashed-line **reviewer panel** at the bottom of the page has four buttons
+that force each state directly — no code changes, no dev tools required.
 
-**Decision: tracks collapse from side-by-side columns into a vertically
-stacked list within each time slot**, rather than any of the alternatives
-below.
+| State   | How to see it |
+|---------|----------------|
+| **Loading** | Click "Show loading state" in the reviewer panel. It also appears naturally for ~700ms on first page load, and after any add/remove. |
+| **Error** | Click "Show error state." This flips a forced-failure flag for one request, so the next fetch fails with a message and a "Try again" button. Also triggers naturally if you click "Try again" while the flag is still set. |
+| **Empty** | Click "Show empty state" (clears storage), or just open the app for the first time — a new user always starts here. |
+| **Populated list** | Click "Reset to normal," or add a book from the form at the top. |
 
-Each time slot (e.g. "9:00 – 9:45") is rendered once, and the three sessions
-that occur in that slot are stacked underneath it as full-width cards, in a
-fixed order (Track A, then B, then C). Track identity is preserved without
-needing horizontal space, using two redundant, non-color cues on every card:
+Click "Reset to normal" at any point to return to ordinary behavior.
 
-- a **left border color** matching the track, and
-- a **text label** ("Track A · Systems") at the top of the card
+## How the three states are kept visually and textually distinct
 
-The color is never the only signal — the label carries the same information,
-so the track is still identifiable for a low-vision or colorblind user, and
-is announced by a screen reader before the session title.
+- **Loading** — neutral panel, no accent color, a spinning ring, copy:
+  "Loading your list… Fetching your books from storage."
+- **Error** — red-tinted panel with a warning icon, copy that names what
+  failed ("Could not reach the reading list storage.") and offers a next
+  step via a "Try again" button.
+- **Empty** — green-tinted panel with a book icon, copy that explains the
+  feature ("Keep track of books you mean to read...") and offers the first
+  action via an "Add your first book" button that focuses the title field.
 
-At 700px and above, where three columns comfortably fit without shrinking
-text, the same slot markup switches to a row layout via one media query
-(`flex-direction: row`) — no separate narrow/wide template, no JS-driven
-layout logic. The DOM order (and therefore keyboard tab order) is identical
-at every width: A, then B, then C, then the next time slot.
+Each state also announces itself to screen readers: the list region is
+`aria-live="polite"`, and the error panel additionally uses `role="alert"`.
 
-### Alternatives considered and rejected
+## What "failure" and "not found" mean here
 
-- **Horizontal scroll per track** — explicitly disallowed by the brief at
-  320px, and it hides two-thirds of "what's on now" off-screen, which
-  defeats the point of a schedule.
-- **A track filter/switcher** (show one track at a time via tabs) — was
-  considered, since it avoids stacking entirely. Rejected because it hides
-  simultaneous options: a visitor asking "what's on at 10am" would need to
-  check three separate tab states instead of scanning one list, which is a
-  worse fit for the core task.
-- **Condensed/abbreviated cards** to fit three across — rejected because
-  session titles vary in length and abbreviation would make titles the least
-  reliable content on the page.
-
-Stacking within a time-anchored slot was the only option that kept "what's
-on at a given time" answerable by scrolling in a single direction, at any
-width, without hiding a track's existence.
-
-## Keyboard and accessibility notes
-
-- Every session is a real `<button>`, so it is reachable via Tab in visual
-  (DOM) order and activates with Enter/Space with no extra JS needed.
-- Day switching uses real `<button>` elements with `role="tab"` /
-  `aria-selected`, reachable and operable the same way.
-- Session details open in a native `<dialog>` via `showModal()`. This:
-  - traps focus inside the dialog while open,
-  - closes on **Escape** for free (native browser behavior),
-  - and the visible `×` button is a `type="submit"` inside a
-    `method="dialog"` form, so it also closes the dialog without JS.
-- Focus is never suppressed: `:focus-visible` outlines are defined
-  explicitly for links, buttons, and session cards, rather than relying on
-  (and risking an accidental override of) the browser default.
-- No fixed pixel widths are used anywhere; the layout is fluid from 320px
-  up, and `overflow-x: hidden` on `html`/`body` combined with the fluid
-  layout ensures no horizontal scrollbar appears at 320px.
+- **Error** = the storage read/write itself failed (simulated via the
+  reviewer panel's forced-failure flag). The error message is specific to
+  the action that failed (loading vs. saving vs. removing), and never
+  silently loses data — a failed remove leaves the book in the list.
+- **Empty** = the read succeeded and returned zero books. This is a
+  distinct case from error, both in the code path and in what's shown.
 
 ## Files
 
-- `index.html` — page structure, day tabs, dialog markup
-- `sessions.js` — schedule data (two days × three tracks × four slots)
-- `app.js` — renders sessions, handles tab switching and dialog open/close
-- `style.css` — visual design and the responsive track-collapse behavior
+- `index.html` — page structure, add form, reviewer panel
+- `store.js` — persistence layer (localStorage) behind an async, delayed,
+  optionally-failing API
+- `app.js` — renders loading/error/empty/list states, wires up add/remove
+  and the reviewer panel
+- `style.css` — visual design, including the distinct styling per state
